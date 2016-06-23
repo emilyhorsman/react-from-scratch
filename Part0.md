@@ -251,7 +251,18 @@ function getEventsUrl(user) {
     return 'https://api.github.com/users/' + user + '/events'
 }
 
+// React elements are a layer of abstraction: the virtual DOM.
 console.assert(React.isValidElement(Heading({ name: 'foobar' })))
+
+// This is a DOM element.
+console.assert(document.createElement('div') instanceof Element)
+
+// React elements are not.
+console.assert(!(Heading({ name: 'foobar'}) instanceof Element))
+
+// We can render the virtual DOM to actual markup on a server:
+console.log(ReactDOMServer.renderToString(Heading({ name: 'foobar' })))
+// <span style="display:block;" class="h6 media-heading" data-reactroot="" data-reactid="1" data-react-checksum="966468459">foobar</span>
 
 var container = document.getElementById('app')
 http('GET', getEventsUrl('emilyhorsman'),
