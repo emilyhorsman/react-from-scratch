@@ -10,6 +10,11 @@
 </div>
 ```
 
+Hey!
+This method shows about the level of JavaScript knowledge this article operates at.
+It includes some concepts such as callbacks (JavaScript’s notion of “higher-order functions”), performing an XMLHttpRequest (Ajax), and parsing some JSON receved from an HTTP request.
+I strongly recommend resources such as [JavaScript Garden](http://bonsaiden.github.io/JavaScript-Garden/) and the [MDN wiki on JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
+
 ```js
 function http(method, url, onSuccess) {
     var request = new XMLHttpRequest()
