@@ -23,55 +23,153 @@ function http(method, url, onSuccess) {
     request.send()
 }
 
-function EventItem(event) {
-    this.event = event
-}
-
-EventItem.prototype.getMediaItem = function() {
+function createEventItem(event) {
     var elm = document.createElement('li')
     elm.classList.add('media')
 
     var mediaLeft = document.createElement('div')
     mediaLeft.classList.add('media-left', 'media-middle')
-    mediaLeft.appendChild(this.getAvatar())
+    mediaLeft.appendChild(createAvatar(event.actor))
     elm.appendChild(mediaLeft)
 
     var mediaBody = document.createElement('div')
     mediaBody.classList.add('media-body')
-    mediaBody.appendChild(this.getHeader())  
-    mediaBody.appendChild(this.getMediaBody())
+    mediaBody.appendChild(createHeader(event.repo))  
+    mediaBody.appendChild(createMediaBody(event))
 
     elm.appendChild(mediaBody)
     return elm
 }
 
-EventItem.prototype.getAvatar = function() {
+function createAvatar(actor) {
     var avatar = document.createElement('img')
-    avatar.src = this.event.actor.avatar_url
+    avatar.src = actor.avatar_url
     avatar.classList.add('img-circle', 'media-object')
     avatar.width = 48
     avatar.height = 48
     return avatar
 }
 
-EventItem.prototype.getHeader = function() {
+function createHeader(repo) {
     var mediaHeader = document.createElement('span')
     mediaHeader.style.display = 'block'
     mediaHeader.classList.add('media-heading', 'h6')
-    mediaHeader.innerText = this.event.repo.name
+    mediaHeader.innerText = repo.name
     return mediaHeader
 }
 
-EventItem.prototype.getMediaBody = function() {
-    var text = event.type + ' at ' + (new Date(this.event.created_at)).toLocaleString()
+function createMediaBody(event) {
+    var text = event.type + ' at ' + (new Date(event.created_at)).toLocaleString()
     return document.createTextNode(text)
 }
 
 function renderEvents(container, events) {
     var fragment = document.createDocumentFragment()
     events.forEach(function(event) {
-        var item = new EventItem(event)
-        fragment.appendChild(item.getMediaItem())
+        fragment.appendChild(createEventItem(event))
+    })
+
+    container.appendChild(fragment)
+}
+
+function getEventsUrl(user) {
+    return 'https://api.github.com/users/' + user + '/events'
+}
+
+var container = document.getElementById('app')
+http('GET', getEventsUrl('emilyhorsman'),
+    renderEvents.bind(null, container))
+```
+
+```js
+function http(method, url, onSuccess) {
+    var request = new XMLHttpRequest()
+    request.open(method, url)
+    request.onload = function() {
+        if (request.status === 200) {
+            onSuccess(JSON.parse(request.responseText))
+        }
+    }
+
+    request.send()
+}
+
+function createElement(tag, props) {
+    var elm = document.createElement(tag)
+    Object.keys(props).forEach(function(key) {
+        // Special behaviour when given a class prop.
+        if (key === 'class') {
+            DOMTokenList.prototype.add.apply(elm.classList, props[key])
+            return
+        }
+
+        if (key === 'style') {
+            var ruleset = props[key]
+            Object.keys(ruleset).forEach(function(property) {
+                elm.style.setProperty(property, ruleset[property])
+            })
+
+            return
+        }
+
+        elm[key] = props[key]
+    })
+
+    // Remaining arguments not in method signature.
+    var children = Array.prototype.slice.call(arguments, 2)
+    children
+        .map(function(child) {
+            if (typeof child === 'string') {
+                return document.createTextNode(child)
+            }
+
+            return child
+        })
+        .forEach(function(child) { elm.appendChild(child) })
+
+    return elm
+}
+
+function Avatar(actor) {
+    return createElement('img', {
+        src: actor.avatar_url,
+        class: ['img-circle', 'media-object'],
+        width: 48,
+        height: 48
+    })
+}
+
+function Heading(repo) {
+    return createElement('span', {
+            style: { display: 'block' },
+            class: ['media-heading', 'h6']
+        },
+
+        repo.name
+    )
+}
+
+function EventItem(event) {
+    return createElement('li',
+        { class: ['media'] },
+
+        createElement('div',
+            { class: ['media-left', 'media-middle'] },
+            Avatar(event.actor)
+        ),
+
+        createElement('div',
+            { class: ['media-body'] },
+            Heading(event.repo),
+            event.type + ' at ' + (new Date(event.created_at)).toLocaleString()
+        )
+    )
+}
+
+function renderEvents(container, events) {
+    var fragment = document.createDocumentFragment()
+    events.forEach(function(event) {
+        fragment.appendChild(EventItem(event))
     })
 
     container.appendChild(fragment)
