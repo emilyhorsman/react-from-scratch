@@ -3,7 +3,7 @@
   "structure": {
     "summary": "README.md"
   },
-  "plugins": ["edit-link", "prism", "-highlight", "github", "anchors", "codepen"],
+  "plugins": ["edit-link", "prism", "-highlight", "github", "anchors"],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/emilyhorsman/react-from-scratch/tree/master",

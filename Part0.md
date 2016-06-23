@@ -1,6 +1,7 @@
 # Part 0
 
-[](codepen://emilyhorsman/jrVeRp?height=300&theme=0)
+<p data-height="265" data-theme-id="light" data-slug-hash="jrVeRp" data-default-tab="result" data-user="emilyhorsman" data-embed-version="2" class="codepen">See the Pen <a href="http://codepen.io/emilyhorsman/pen/jrVeRp/">React from Scratch Part 0</a> by Emily Horsman (<a href="http://codepen.io/emilyhorsman">@emilyhorsman</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
 
 ```html
 <div class="container-fluid m-t-1">
@@ -158,3 +159,5 @@ var container = document.getElementById('app')
 http('GET', getEventsUrl('emilyhorsman'),
     renderEvents.bind(null, container))
 ```
+
+https://twitter.com/dan_abramov/status/745757519994294281
