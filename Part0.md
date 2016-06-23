@@ -45,7 +45,7 @@ EventItem.prototype.getMediaItem = function() {
 EventItem.prototype.getAvatar = function() {
   var avatar = document.createElement('img')
   avatar.src = this.event.actor.avatar_url
-  avatar.classList.add('avatar', 'img-circle', 'media-object')
+  avatar.classList.add('img-circle', 'media-object')
   avatar.width = 48
   avatar.height = 48
   return avatar
@@ -72,6 +72,65 @@ function renderEvents(container, events) {
   })
 
   container.appendChild(fragment)
+}
+
+function getEventsUrl(user) {
+  return 'https://api.github.com/users/' + user + '/events'
+}
+
+var container = document.getElementById('app')
+http('GET', getEventsUrl('emilyhorsman'),
+  renderEvents.bind(null, container))
+```
+
+
+```html
+<div class="container-fluid m-t-1" id="app"></div>
+```
+
+```js
+function http(method, url, onSuccess) {
+  var request = new XMLHttpRequest()
+  request.open(method, url)
+  request.onload = function() {
+    if (request.status === 200) {
+      onSuccess(JSON.parse(request.responseText))
+    }
+  }
+
+  request.send()
+}
+
+function EventItem(props) {
+  return React.createElement('li', { className: 'media', key: props.id },
+    React.createElement('div', { className: 'media-left media-middle' },
+      React.createElement('img', {
+        src: props.actor.avatar_url,
+        className: 'img-circle media-object',
+        width: 48,
+        height: 48
+      })
+    ),
+
+    React.createElement('div', { className: 'media-body' },
+      React.createElement('span', {
+        style: { display: 'block' },
+        className: 'h6 media-heading'
+      }, props.repo.name),
+
+      props.type + ' at ' + (new Date(props.created_at)).toLocaleString()
+    )
+  )
+}
+
+function Root(props) {
+  return React.createElement('ul', {
+    className: 'media-list'
+  }, props.events.map(EventItem))
+}
+
+function renderEvents(container, events) {
+  ReactDOM.render(Root({ events: events }), container)
 }
 
 function getEventsUrl(user) {
