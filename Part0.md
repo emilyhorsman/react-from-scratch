@@ -136,6 +136,46 @@ Essentially, when the `renderEvents` function is eventually called (when we get 
 
 #### Rendering Stuff
 
+The `renderEvents` function needs to take all the event objects we’re receiving from GitHub and insert a list of these things into the `container`:
+
+![Render outlines](images/Part0Outlines.png)
+
+The final product won’t have all the borders I added here.
+I’ve done this to demonstrate that a single list item is split up into a bunch of pieces.
+The list item representing the event is one big piece itself, and it contains an avatar piece, a heading piece, and a body piece.
+
+>Note!
+>[Bootstrap](http://v4-alpha.getbootstrap.com/) is included in the CodePen.
+>We’re just using the [media object](http://v4-alpha.getbootstrap.com/layout/media-object/) to represent an event, a common pattern in web design.
+>It consists of `media-left`, `media-body`, and `media-heading` classes.
+
+Each media item is represented in the browser’s DOM as a hierarchy of [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) objects.
+These objects each have their own _children_.
+
+A single event item ends up having a representation that looks something like the following.
+
+```
+HTMLLIElement
+├──HTMLDivElement
+│  └──HTMLImageElement
+└──HTMLDivElement
+   ├──HTMLSpanElement
+   │  └──Text
+   └──Text
+```
+
+This is how our browser represents a document (a webpage) in the DOM.
+We typically write our documents in markup, like `<li><div><img src="foo.jpg"></div></li>`.
+This ends up being converted into a structure like above though, as the browser compiles markup into a DOM tree.
+
+>Note!
+>This is a simplistic explanation.
+>If you’d like to learn more about how browsers work their magic, check out [Tali Garsiel](http://taligarsiel.com/)’s excellent
+>_[How Browsers Work: Behind the scenes of modern web browsers](http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/)_.
+
+The important thing to take away is that the browser models your webpage in the DOM.
+This will be important for later.
+
 ```js
 function createEventItem(event) {
     var elm = document.createElement('li')
