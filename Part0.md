@@ -127,11 +127,11 @@ Notice we’re already getting the `<ul>` element we had earlier.
 We’re also telling the `http` method to give our data to this `renderEvents` function.
 We haven’t written this function yet, it’s going to take a container element in the DOM and put some stuff in it—our list of events from the GitHub API.
 (
-	Unsure what the DOM is? Check out [this CSS tricks article](https://css-tricks.com/dom/).
-	Essentially, it stands for Document Object Model and it’s what the browser uses to represent all the elements on our page.
-	That `<ul>` tag we wrote becomes an unordered list Element in the DOM.
+Unsure what the DOM is? Check out [this CSS tricks article](https://css-tricks.com/dom/).
+Essentially, it stands for Document Object Model and it’s what the browser uses to represent all the elements on our page.
+That `<ul>` tag we wrote becomes an unordered list Element in the DOM.
 )
-You may also notice the `bind` call. If this is new to you, check out the [MDN page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) on it. Particularly the examples.
+You may also notice the `bind` call. If this is new to you, check out the [MDN page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) on it—particularly, the examples.
 Essentially, when the `renderEvents` function is eventually called (when we get data back from the API), it will receive the `container` reference as an argument.
 
 #### Rendering Stuff
