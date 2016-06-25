@@ -132,6 +132,7 @@ We haven’t written this function yet, it’s going to take a container element
 	That `<ul>` tag we wrote becomes an unordered list Element in the DOM.
 )
 You may also notice the `bind` call. If this is new to you, check out the [MDN page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) on it. Particularly the examples.
+Essentially, when the `renderEvents` function is eventually called (when we get data back from the API), it will receive the `container` reference as an argument.
 
 #### Rendering Stuff
 
