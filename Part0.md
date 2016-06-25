@@ -399,6 +399,9 @@ Yeah, this is kind of gross.
 This procedurally written function allows us to think of the rest of our example in a declarative fashion.
 Let’s get into how we do that.
 
+The simplest example is the avatar. It has a collection of properties (also known as “props”), but no children.
+Computer science dorks might think of this as a “leaf node”?
+Something like that.
 
 ```js
 function Avatar(actor) {
@@ -409,7 +412,17 @@ function Avatar(actor) {
         height: 48
     })
 }
+```
 
+Woo, no more steps!
+We just have the tag we want, an `img`, and an object of props.
+Notice that we’re not calling this `createAvatar` anymore.
+I want to start thinking of these functions as a declaration of the element, instead of instructions to create an element.
+Thus, let’s just use the name of what this element is — an Avatar.
+`Avatar` is a “component”.
+We’re going to plug these components together.
+
+```js
 function Heading(repo) {
     return createElement('span', {
             style: { display: 'block' },
@@ -445,14 +458,6 @@ function renderEvents(container, events) {
 
     container.appendChild(fragment)
 }
-
-function getEventsUrl(user) {
-    return 'https://api.github.com/users/' + user + '/events'
-}
-
-var container = document.getElementById('app')
-http('GET', getEventsUrl('emilyhorsman'),
-    renderEvents.bind(null, container))
 ```
 
 
