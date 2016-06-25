@@ -99,13 +99,41 @@ function http(method, url, onSuccess) {
 }
 ```
 
-🤔_
-Hey!
-This method roughly demonstrates the level of JavaScript knowledge this article operates at.
-It includes some concepts such as callbacks (JavaScript’s notion of “higher-order functions”), performing an XMLHttpRequest (Ajax), and parsing some JSON received from an HTTP request.
-I strongly recommend resources such as [JavaScript Garden](http://bonsaiden.github.io/JavaScript-Garden/) and the [MDN wiki on JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
-I don’t want to explain too many of these concepts in this article, as others have done a better job than I can.
-_
+This can be called with something like `http('GET', 'http://google.com/', handleSuccess)`.
+
+>🤔
+>Hey!
+>This method roughly demonstrates the level of JavaScript knowledge this article operates at.
+>It includes some concepts such as callbacks (JavaScript’s notion of “higher-order functions”), performing an XMLHttpRequest (Ajax), and parsing some JSON received from an HTTP request.
+>I strongly recommend resources such as [JavaScript Garden](http://bonsaiden.github.io/JavaScript-Garden/) and the [MDN wiki on JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
+>I don’t want to explain too many of these concepts in this article, as others have done a better job than I can.
+
+We’re also going to write a quick helper method that takes a username on GitHub and returns the API URL.
+
+```js
+function getEventsUrl(user) {
+    return 'https://api.github.com/users/' + user + '/events'
+}
+```
+
+Now let’s call it and get this out of the way now.
+
+```js
+var container = document.getElementById('app')
+http('GET', getEventsUrl('emilyhorsman'), renderEvents.bind(null, container))
+```
+
+Notice we’re already getting the `<ul>` element we had earlier.
+We’re also telling the `http` method to give our data to this `renderEvents` function.
+We haven’t written this function yet, it’s going to take a container element in the DOM and put some stuff in it—our list of events from the GitHub API.
+(
+	Unsure what the DOM is? Check out [this CSS tricks article](https://css-tricks.com/dom/).
+	Essentially, it stands for Document Object Model and it’s what the browser uses to represent all the elements on our page.
+	That `<ul>` tag we wrote becomes an unordered list Element in the DOM.
+)
+You may also notice the `bind` call. If this is new to you, check out the [MDN page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) on it. Particularly the examples.
+
+#### Rendering Stuff
 
 ```js
 function createEventItem(event) {
@@ -156,14 +184,6 @@ function renderEvents(container, events) {
 
     container.appendChild(fragment)
 }
-
-function getEventsUrl(user) {
-    return 'https://api.github.com/users/' + user + '/events'
-}
-
-var container = document.getElementById('app')
-http('GET', getEventsUrl('emilyhorsman'),
-    renderEvents.bind(null, container))
 ```
 
 ```js
