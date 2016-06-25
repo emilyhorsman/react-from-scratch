@@ -176,6 +176,35 @@ This ends up being converted into a structure like above though, as the browser 
 The important thing to take away is that the browser **models your webpage with a DOM**.
 This will be important for later.
 
+Alright, let’s go ahead and write that `renderEvents` function.
+It’s going to take the aforementioned `container`, as well as a list of events.
+
+```js
+function renderEvents(container, events) {
+    var fragment = document.createDocumentFragment()
+    events.forEach(function(event) {
+        fragment.appendChild(createEventItem(event))
+    })
+
+    container.appendChild(fragment)
+}
+```
+
+As you can see, I’ve kept this function short.
+We create a [`DocumentFragment`](https://developer.mozilla.org/en/docs/Web/API/DocumentFragment) to put all the events in.
+This acts like a buffer.
+We put all the items in the buffer, and then empty the buffer into the `container` — the `<ul>` list — once we’re done everything.
+The alternative to this would be to add the items directly to the `container`.
+Doing this with a `DocumentFragment` ensures the browser doesn’t have to recompute anything until we’re finished.
+
+Anyway, the inner portion of this function passes each event object into `createEventItem`.
+`createEventItem` needs to return a DOM `Element` that we append to the fragment.
+
+>Note!
+>You should check out [Introduction to the DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction) on MDN
+>if you’ve never written any JavaScript that utilizes the browser’s DOM API with functions like `appendChild` and `createElement`.
+>The page on [`appendChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild) is also a good refresher.
+
 ```js
 function createEventItem(event) {
     var elm = document.createElement('li')
@@ -215,15 +244,6 @@ function createHeader(repo) {
 function createMediaBody(event) {
     var text = event.type + ' at ' + (new Date(event.created_at)).toLocaleString()
     return document.createTextNode(text)
-}
-
-function renderEvents(container, events) {
-    var fragment = document.createDocumentFragment()
-    events.forEach(function(event) {
-        fragment.appendChild(createEventItem(event))
-    })
-
-    container.appendChild(fragment)
 }
 ```
 
