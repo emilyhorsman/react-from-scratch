@@ -1,7 +1,75 @@
-# Part 0
+# Part 0: Introduction
+
+Feel free to [skip down straight into the code](#lets-go).
+
+## Intro
+
+### Motivation
+
+I write a lot of [React](https://facebook.github.io/react/index.html) these days.
+Almost all applications I write involving React include surrounding JavaScript ecosystem: webpack, babel, redux, etc.
+Many curious individuals I talk to have been led to believe that one should learn all of this surrounding ecosystem at the same time.
+They’re curious about React, but all the extra things are overwhelming.
+Well-written React also utilizes many patterns that not everyone may be familiar with — less imperative and more functional ways of writing code.
+I’ll get into what that means later.
+
+### Intent
+
+I want to write a series of articles that teach React with the simplest principles first.
+Then I’ll sprinkle in things as we go, and hopefully enlighten the reader on the motivations for using all of this.
+This first article is going to include very little React, actually.
+I’m going to write a very small application without any frameworks, transpilers, or libraries.
+Then we’re going to look at how to write the same thing using React. Without any of the fancier stuff.
+
+### Disclaimer
+
+React is not the right choice for everything.
+This example in Part 0 will not be a good usage of React.
+React’s lack of opinions on various concerns in your application, and its [minimal API surface](https://www.youtube.com/watch?v=4anAwXYqLG8) do make it a good choice in many applications though!
+Tessa Thornton ([@tessthornton](https://medium.com/shopify-ux/how-to-learn-web-frameworks-9d447cb71e68#.7c6loosm2)) has an excellent—and very relevant—article on learning web frameworks.
+
+I once read a tweet that went something like this:
+
+>The hardest part of being a React instructor is convincing all my students they don’t need to re-write everything in React.
+
+(If anyone knows the attribution for this tweet, please send it my way and I will include it here.)
+
+### Who is this for?
+
+Everyone!
+Even experienced developers can get lost in all the JavaScript ecosystem.
+I aim to introduce ES6+ concepts and tools like webpack at The Right Time™.
+Individuals who are new to programming may want to go check out some [JavaScript tutorials](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction) beforehand.
+That said, I intend to link to good resources on trickier concepts as we go.
+
+### Why not the official React documentation?
+
+Actually, you should check out the [official docs](https://facebook.github.io/react/docs/getting-started.html)!
+Particularly, [Thinking in React](https://facebook.github.io/react/docs/thinking-in-react.html).
+(You don’t need to for this article though).
+I’d like to cover more than the official docs though, and I’d also like to avoid some [ES5](http://benmccormick.org/2015/09/14/es5-es6-es2016-es-next-whats-going-on-with-javascript-versioning/) concepts, such as `React.createClass` found in their docs.
+Eventually, this article series should get into specific ES6+ examples, and tools like webpack.
+
+## Let’s go
+
+We’re going to build this:
 
 <p data-height="265" data-theme-id="light" data-slug-hash="jrVeRp" data-default-tab="result" data-user="emilyhorsman" data-embed-version="2" class="codepen">See the Pen <a href="http://codepen.io/emilyhorsman/pen/jrVeRp/">React from Scratch Part 0</a> by Emily Horsman (<a href="http://codepen.io/emilyhorsman">@emilyhorsman</a>) on <a href="http://codepen.io">CodePen</a>.</p>
 <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+
+It gets some data from the [GitHub API](https://developer.github.com/v3/) and displays it in a list.
+It doesn’t update or do anything fancy.
+
+[This](https://api.github.com/users/emilyhorsman/events) is the data we get back from the GitHub API.
+
+### Without React
+
+This first example is all [on CodePen](http://codepen.io/emilyhorsman/pen/wWoExK). Feel free to go play with it.
+
+Let’s get some quick stuff out of the way first.
+The following is the only markup (HTML) in the application.
+It’s just a `<div>` to contain everything, and an unordered list that JavaScript can insert things into.
+The `<ul>` has an `id` that our JavaScript will use to know where to put events into.
 
 ```html
 <div class="container-fluid m-t-1">
@@ -10,10 +78,12 @@
 </div>
 ```
 
-Hey!
-This method shows about the level of JavaScript knowledge this article operates at.
-It includes some concepts such as callbacks (JavaScript’s notion of “higher-order functions”), performing an XMLHttpRequest (Ajax), and parsing some JSON receved from an HTTP request.
-I strongly recommend resources such as [JavaScript Garden](http://bonsaiden.github.io/JavaScript-Garden/) and the [MDN wiki on JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
+#### Fetching Data
+
+GitHub provides us an API that gives back some JSON.
+This all works over HTTP.
+We need a function that fetches some data from an API.
+We’re only going to make a single request for this example, but let’s right something to take care of that for the whole article.
 
 ```js
 function http(method, url, onSuccess) {
@@ -27,7 +97,17 @@ function http(method, url, onSuccess) {
 
     request.send()
 }
+```
 
+🤔_
+Hey!
+This method roughly demonstrates the level of JavaScript knowledge this article operates at.
+It includes some concepts such as callbacks (JavaScript’s notion of “higher-order functions”), performing an XMLHttpRequest (Ajax), and parsing some JSON received from an HTTP request.
+I strongly recommend resources such as [JavaScript Garden](http://bonsaiden.github.io/JavaScript-Garden/) and the [MDN wiki on JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
+I don’t want to explain too many of these concepts in this article, as others have done a better job than I can.
+_
+
+```js
 function createEventItem(event) {
     var elm = document.createElement('li')
     elm.classList.add('media')
