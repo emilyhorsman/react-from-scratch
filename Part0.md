@@ -205,6 +205,8 @@ Anyway, the inner portion of this function passes each event object into `create
 >if you’ve never written any JavaScript that utilizes the browser’s DOM API with functions like `appendChild` and `createElement`.
 >The page on [`appendChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild) is also a good refresher.
 
+Onwards and upwards!
+
 ```js
 function createEventItem(event) {
     var elm = document.createElement('li')
@@ -223,7 +225,42 @@ function createEventItem(event) {
     elm.appendChild(mediaBody)
     return elm
 }
+```
 
+Alright, there’s a lot going on here.
+
+1. We create a list item to contain the event.
+2. We append a div to it representing the left-hand side of the event.
+3. We append a div to it representing the body of the event.
+
+In the left-hand div, we append whatever `Element` gets returned from `createAvatar`.
+We give `createAvatar` the `actor` property of the event. This looks something the following.
+
+```
+"actor": {
+  "id": 3536823,
+  "login": "emilyhorsman",
+  "display_login": "emilyhorsman",
+  "gravatar_id": "",
+  "url": "https://api.github.com/users/emilyhorsman",
+  "avatar_url": "https://avatars.githubusercontent.com/u/3536823?"
+},
+```
+
+We’ll let `createAvatar` worry about what to do with this.
+
+The body div then gets the `Element`s from `createHeader` and `createMediaBody` appended to it.
+There isn’t anything special about all these methods, we’re just organizing the creation of all these DOM elements.
+Think of it as a bit of separation of concerns — each method is getting the data they need to render the bit they’re responsible for.
+
+>Note!
+>We make heavy use of [`classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList).
+>This just adds CSS classes to the elements.
+>You may be familiar with something more like `className="media-left media-middle"`.
+>This accomplishes the same thing.
+>`classList` is considered the modern, better practice.
+
+```js
 function createAvatar(actor) {
     var avatar = document.createElement('img')
     avatar.src = actor.avatar_url
@@ -232,7 +269,12 @@ function createAvatar(actor) {
     avatar.height = 48
     return avatar
 }
+```
 
+Nothing new here.
+We create an image element, set its `src` attribute to the `avatar_url` and then give it some aesthetics.
+
+```js
 function createHeader(repo) {
     var mediaHeader = document.createElement('span')
     mediaHeader.style.display = 'block'
@@ -246,6 +288,9 @@ function createMediaBody(event) {
     return document.createTextNode(text)
 }
 ```
+
+These two are similar — we render the repository name and some information about the event.
+And we’re done!
 
 ```js
 function http(method, url, onSuccess) {
