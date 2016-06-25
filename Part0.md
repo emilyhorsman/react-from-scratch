@@ -50,7 +50,7 @@ Particularly, [Thinking in React](https://facebook.github.io/react/docs/thinking
 I’d like to cover more than the official docs though, and I’d also like to avoid some [ES5](http://benmccormick.org/2015/09/14/es5-es6-es2016-es-next-whats-going-on-with-javascript-versioning/) concepts, such as `React.createClass` found in their docs.
 Eventually, this article series should get into specific ES6+ examples, and tools like webpack.
 
-## Let’s go
+## Let’s Go
 
 We’re going to build this:
 
