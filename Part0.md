@@ -252,6 +252,11 @@ We’ll let `createAvatar` worry about what to do with this.
 The body div then gets the `Element`s from `createHeader` and `createMediaBody` appended to it.
 There isn’t anything special about all these methods, we’re just organizing the creation of all these DOM elements.
 Think of it as a bit of separation of concerns — each method is getting the data they need to render the bit they’re responsible for.
+This yields a really useful idea too.
+Since these are all individual methods that only care about what they’re given — and not about the surrounding application — to produce their output, they can be re-used anywhere.
+These functions will _always_ return the same output given the same input.
+It’s really good practice to write your functions this way.
+Functions should be bite-sized pieces that are simple to reason about.
 
 >Note!
 >We make heavy use of [`classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList).
