@@ -292,6 +292,31 @@ function createMediaBody(event) {
 These two are similar — we render the repository name and some information about the event.
 And we’re done!
 
+#### Take Two: Declarative Rendering
+
+So this is neat and all, but it’s all a little unwieldy.
+Everything is very _procedural_ and we have to think about appending things in the right places.
+This isn’t really how we necessarily _think_ about the problem at hand, however.
+We’re trying to render an event.
+We know an event is a list item, with an image, a heading, and some body text inside of it.
+We know each of these elements should have a bunch of properties.
+I’d personally rather think of things just like that, rather than a series of commands on how all this should be manipulated.
+
+I want to write some JavaScript that takes the list of the events from the server and describes the desired outcome, _what_ gets rendered.
+I don’t want to think about things in terms of _how_ they should be rendered and _how_ we should set properties.
+Describing _what_ should be accomplished is a style of programming known as [“declarative programming”](https://en.wikipedia.org/wiki/Declarative_programming).
+
+Let’s write a method that receives the following.
+
+1. The type of element we want to render.
+2. A list of properties the element should have.
+3. A list of children the element should have.
+
+This way, we could nest calls to this function in a hierarchy similar to the visual outlines above, or the aforementioned DOM tree.
+This feels a lot cleaner and easy to reason about than a procedural list of rules.
+
+We’re going to re-write things a bit, then. The code for take two is also available altogether on [CodePen](http://codepen.io/emilyhorsman/pen/VjmOZO) as well.
+
 ```js
 function http(method, url, onSuccess) {
     var request = new XMLHttpRequest()
