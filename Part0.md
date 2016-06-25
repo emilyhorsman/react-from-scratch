@@ -320,21 +320,11 @@ Let’s write a method that receives the following.
 This way, we could nest calls to this function in a hierarchy similar to the visual outlines above, or the aforementioned DOM tree.
 This feels a lot cleaner and easy to reason about than a procedural list of rules.
 
-We’re going to re-write things a bit, then. The code for take two is also available altogether on [CodePen](http://codepen.io/emilyhorsman/pen/VjmOZO) as well.
+We’re going to re-write the whole example a bit, then. The code for take two is also available altogether on [CodePen](http://codepen.io/emilyhorsman/pen/VjmOZO) as well. Note that we’re re-using some methods, such as `http`.
+
+#### createElement Helper Function
 
 ```js
-function http(method, url, onSuccess) {
-    var request = new XMLHttpRequest()
-    request.open(method, url)
-    request.onload = function() {
-        if (request.status === 200) {
-            onSuccess(JSON.parse(request.responseText))
-        }
-    }
-
-    request.send()
-}
-
 function createElement(tag, props) {
     var elm = document.createElement(tag)
     Object.keys(props).forEach(function(key) {
@@ -344,6 +334,7 @@ function createElement(tag, props) {
             return
         }
 
+        // Special behaviour when given a style prop.
         if (key === 'style') {
             var ruleset = props[key]
             Object.keys(ruleset).forEach(function(property) {
@@ -353,10 +344,11 @@ function createElement(tag, props) {
             return
         }
 
+        // Any other prop can just be set normally.
         elm[key] = props[key]
     })
 
-    // Remaining arguments not in method signature.
+    // Remaining arguments not in method signature are children.
     var children = Array.prototype.slice.call(arguments, 2)
     children
         .map(function(child) {
@@ -370,7 +362,45 @@ function createElement(tag, props) {
 
     return elm
 }
+```
 
+This function is a bit ridiculous.
+Let’s go through it step by step.
+
+>Note!
+>Observant readers will notice that I said this function would take three arguments, but this signature only has two — `tag` and `props`.
+>This is because the “third” argument is in fact just an arbitrary list of children.
+>Any arguments after `tag` and `props` will be considered children.
+>The inner scope of a function in JavaScript can access the arguments it was called with through the `arguments` keyword.
+>You can read about this on MDN [here](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/arguments).
+>Readers who have played with more recent specs of JavaScript, perhaps with a transpiler, might be jumping up and down yelling “spread operator”.
+
+1. We create an element with the tag passed in, such as `div` or `img`.
+2. We iterate over the object of properties we’re given, such as `{ width: 48, height: 48 }`.
+3. If one of these properties is declaring a `class`, we need to handle it specially. We need to whip out `classList`.
+4. If one of these properties is declaring a `style`, we also need to handle it specially. We to use `elm.style.setProperty` to set a CSS declaration.
+5. Any remaining properties can be set with the `=` assignment operator.
+6. Iterate over the remaining arguments after `tag` and `props`. These are our children.
+7. If the child is a `string` object, create a text node for it.
+8. Append each of these children in order to our created element.
+9. Return the final element.
+
+Yeah, this is kind of gross.
+
+>Note!
+>This function contained the most complicated JavaScript in this article.
+>As mentioned in a previous note, other people have written better explanations than I can on JavaScript concepts.
+>Check out: [`Object.keys`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/keys);
+>[“Array-like objects”](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/slice#Array-like_objects) for the nasty `Array.prototype.slice` bit;
+>[`Array.prototype.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map);
+>[`CSSStyleDeclaration`](https://developer.mozilla.org/en/docs/Web/API/CSSStyleDeclaration) for the `style.setProperty` bit;
+>[JavaScript Garden’s “Accessing Properties”](http://bonsaiden.github.io/JavaScript-Garden/#accessing-properties) for the usage of `obj[key] = value`.
+
+This procedurally written function allows us to think of the rest of our example in a declarative fashion.
+Let’s get into how we do that.
+
+
+```js
 function Avatar(actor) {
     return createElement('img', {
         src: actor.avatar_url,
