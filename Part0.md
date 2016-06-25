@@ -173,7 +173,7 @@ This ends up being converted into a structure like above though, as the browser 
 >If you’d like to learn more about how browsers work their magic, check out [Tali Garsiel](http://taligarsiel.com/)’s excellent
 >_[How Browsers Work: Behind the scenes of modern web browsers](http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/)_.
 
-The important thing to take away is that the browser models your webpage in the DOM.
+The important thing to take away is that the browser **models your webpage with a DOM**.
 This will be important for later.
 
 ```js
