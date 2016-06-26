@@ -422,6 +422,11 @@ Thus, let’s just use the name of what this element is — an Avatar.
 `Avatar` is a “component”.
 We’re going to plug these components together.
 
+Next, the `Heading` component.
+This one has a single child.
+In this case, the child isn’t another component — nothing provided by another function — it’s just text.
+The only child is just the string found in `repo.name`.
+
 ```js
 function Heading(repo) {
     return createElement('span', {
@@ -432,24 +437,37 @@ function Heading(repo) {
         repo.name
     )
 }
+```
 
+Now let’s put them all together.
+This final `EventItem` component will have some children divs.
+Nested in these children will be the `Heading` and `Avatar` components.
+
+```js
 function EventItem(event) {
     return createElement('li',
         { class: ['media'] },
 
         createElement('div',
+
             { class: ['media-left', 'media-middle'] },
             Avatar(event.actor)
         ),
 
         createElement('div',
             { class: ['media-body'] },
+
             Heading(event.repo),
             event.type + ' at ' + (new Date(event.created_at)).toLocaleString()
         )
     )
 }
+```
 
+We have our final `EventItem` component.
+Let’s modify our previous `renderEvents` function to use it, instead of `createEventItem`.
+
+```js
 function renderEvents(container, events) {
     var fragment = document.createDocumentFragment()
     events.forEach(function(event) {
@@ -460,6 +478,62 @@ function renderEvents(container, events) {
 }
 ```
 
+The only line that changed was the `fragment.appendChild` call.
+
+So this is all pretty decent.
+We’re thinking in terms of re-usable components now and we’re doing so in a fairly declarative way.
+It could be improved, but it’s not bad.
+We could keep improving this, but I think we’re ready to take things to React.
+
+#### Methodology
+
+Yes, I just dragged you through a whole lot of things and not a single line used anything from the React library.
+Just before we get into React, I want to mention some other ways of doing things.
+The way we just took data from a server and turned it into a document with JavaScript was a relatively low-level way of doing things.
+There are alternate ways we could have done this, each with their own trade-offs.
+Some of them may have offered a slightly better “abstraction”.
+
+For instance, we could have put all the markup we’d traditionally write for this in a string.
+Something like the following.
+
+```html
+<script id="eventItemTemplate" type="text/template">
+    <li class="media">
+        <div class="media-left media-middle">
+            <img src="$src" class="img-circle media-object" width="48" height="48">
+        </div>
+
+        <div class="media-body">
+            <span class="media-heading h6" style="display: block">$heading</span>
+            $body
+        </div>
+    </li>
+</script>
+```
+
+```js
+document.getElementById('eventItemTemplate').innerText
+```
+
+We could then do a simple string replacement, replacing `$src`, `$heading`, and `$body` with the right variables from our `event` object.
+Then we could concatenate all these strings together and set the `container.innerHTML`.
+We could even just concatenate the variables directly with the markup (this wouldn’t be the best, because you’re coupling your data and presentation together).
+This would work just fine.
+It wouldn’t technically be as performant, but it would work.
+For something this small, one wouldn’t notice a difference.
+We’d even yield the benefit of giving someone without JavaScript and DOM knowledge the ability to modify the presentation of this.
+This is a really notable trade-off.
+It’s only worth noting as we get into learning React.
+It’s an issue we’re going to solve, but the way we learn React at first will lose this same trade-off.
+
+Doing this sort of string replacement is essentially “templating”.
+This means we could use one of the popular libraries for this.
+Many of them are pretty lightweight and easy to use.
+The colloquial example is [`handlebars`](http://handlebarsjs.com/).
+There are [many](https://garann.github.io/template-chooser/) of these JavaScript templating libraries.
+
+Recently, many browsers also implemented a [`<template>`](https://developer.mozilla.org/en/docs/Web/HTML/Element/template) tag used for this sort of thing.
+You can use this to clone an element created once, and then query children and fill in the elements.
 
 ```html
 <div class="container-fluid m-t-1" id="app"></div>
