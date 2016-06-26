@@ -622,8 +622,8 @@ console.assert(document.createElement('div') instanceof Element)
 console.assert(!(Heading({ name: 'foobar'}) instanceof Element))
 
 // We can render the virtual DOM to actual markup on a server:
-console.log(ReactDOMServer.renderToString(Heading({ name: 'foobar' })))
-// <span style="display:block;" class="h6 media-heading" data-reactroot="" data-reactid="1" data-react-checksum="966468459">foobar</span>
+console.log(ReactDOMServer.renderToStaticMarkup(Heading({ name: 'foobar' })))
+// <span style="display:block;" class="h6 media-heading">foobar</span>
 
 var container = document.getElementById('app')
 http('GET', getEventsUrl('emilyhorsman'),
