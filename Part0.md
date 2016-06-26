@@ -597,6 +597,29 @@ You’ll notice we called a `Root` function and gave the result to `render`s fir
 This means `Root` needs to return a `ReactElement`.
 
 ```js
+function Root(props) {
+    return React.createElement('ul', {
+        className: 'media-list'
+    }, props.events.map(EventItem))
+}
+```
+
+We called `Root` with an object containing some events.
+Objects passed into functions like this — functions representing a “component” — are known as props.
+The term `props` is a convention in React applications.
+`React.createElement` is what we use to create `ReactElement`s.
+The call to it looks a lot like our previous `createElement` helper, this was deliberate.
+The first argument is the tag — the `DOM` element we’re abstracting.
+The second argument is some `props` we give our `ReactElement`.
+Any further arguments are children, or `Array`s of children.
+`Root` gives `createElement` some children by mapping over all the `events` given, with `EventItem` — another component.
+This produces a list of `ReactElement`s, each returned by `EventItem`, one for each event.
+
+>Note!
+>React uses `className` for a space-separated list of classes.
+>This is because `class` is a reserved keyword in JavaScript, and because `className` is congruent with setting classes on a DOM element.
+
+```js
 function Avatar(props) {
     return React.createElement('img', {
         src: props.avatar_url,
@@ -619,6 +642,7 @@ function Heading(props) {
 function EventItem(props) {
     return React.createElement('li',
         { className: 'media', key: props.id },
+
         React.createElement('div',
             { className: 'media-left media-middle' },
             Avatar(props.actor)
@@ -631,13 +655,9 @@ function EventItem(props) {
         )
     )
 }
+```
 
-function Root(props) {
-    return React.createElement('ul', {
-        className: 'media-list'
-    }, props.events.map(EventItem))
-}
-
+```js
 // React elements are a layer of abstraction: the virtual DOM.
 console.assert(React.isValidElement(Heading({ name: 'foobar' })))
 
@@ -652,5 +672,3 @@ console.log(ReactDOMServer.renderToStaticMarkup(Heading({ name: 'foobar' })))
 // <span style="display:block;" class="h6 media-heading">foobar</span>
 
 ```
-
-https://twitter.com/dan_abramov/status/745757519994294281
