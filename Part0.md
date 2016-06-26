@@ -538,7 +538,7 @@ You can use this to clone an element created once, and then query children and f
 A central point to all of this is that there are many ways to render dynamic data during the runtime of your application, after the page has been loaded from the initial server response.
 There are trade-offs to all of these, but it’s more-or-less a solved problem*.
 
->* Okay fine, there’s plenty of room for improvement.
+>\* Okay fine, there’s plenty of room for improvement.
 
 ### (enter React)
 
