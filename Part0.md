@@ -545,24 +545,58 @@ There are trade-offs to all of these, but it’s more-or-less a solved problem*.
 So, I want to say it right up front.
 This problem of rendering data after a page is loaded, from a server response or something — React didn’t break new ground here.
 If your page is completely static — not interactive — and doesn’t have a lot of data to manage during runtime, you should equally consider a templating library!
+However, I also really like React’s approach to presentation development.
+We’ll end Part 0 with an explanation of what React _is_ exactly.
+
+>Note!
+>All code is available for this last example altogether [on CodePen](http://codepen.io/emilyhorsman/pen/jrVeRp).
+
+To begin, we’re going to modify our markup slightly.
+React constructs a tree akin to what we’ve played with above.
+It expects this tree to have a “root” element.
+This means we can’t render a list of `<li>` elements into a container, this would be considered multiple roots.
+The solution is simple however, React will render the `<ul>` element instead of placing it in our markup.
+This `<ul>` element will be our root element.
 
 ```html
 <div class="container-fluid m-t-1" id="app"></div>
 ```
 
+Notice we moved the `id` to the container `div`.
+React requires a target element in the DOM to render into.
+
 ```js
-function http(method, url, onSuccess) {
-    var request = new XMLHttpRequest()
-    request.open(method, url)
-    request.onload = function() {
-        if (request.status === 200) {
-            onSuccess(JSON.parse(request.responseText))
-        }
-    }
+var container = document.getElementById('app')
+http('GET', getEventsUrl('emilyhorsman'), renderEvents.bind(null, container))
+```
 
-    request.send()
+These are the exact same calls as before.
+We need to change our `renderEvents` function to use React now though.
+Specifically, `ReactDOM`.
+React actually has different “renderers”.
+This means you can take React over to a native platform, such as iOS and Android, using most of the same concepts and codebase.
+Or, you can render on the server-side, instead of in a visitor’s browser.
+We only care about `ReactDOM` right now.
+It provides a [`render`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render) function.
+We call this function with a `ReactElement` and a DOM `Element`, it renders the `ReactElement` to a DOM `Element`.
+
+```js
+function renderEvents(container, events) {
+    ReactDOM.render(Root({ events: events }), container)
 }
+```
 
+Notice the key difference here.
+Before, we created a helper function that just returned DOM `Element`s, and we stuck those in another DOM `Element` — our container.
+Now, we are going to play with `ReactElement`s and only ever worry about one DOM `Element` — our container.
+`ReactElement`s are not DOM `Element`s.
+`ReactElement`s constitute an abstraction of the browser’s DOM, managing a lot of complexity for us.
+We’ll look at the properties of these as we go.
+For now, let’s look into creating some `ReactElement`s.
+You’ll notice we called a `Root` function and gave the result to `render`s first argument.
+This means `Root` needs to return a `ReactElement`.
+
+```js
 function Avatar(props) {
     return React.createElement('img', {
         src: props.avatar_url,
@@ -604,14 +638,6 @@ function Root(props) {
     }, props.events.map(EventItem))
 }
 
-function renderEvents(container, events) {
-    ReactDOM.render(Root({ events: events }), container)
-}
-
-function getEventsUrl(user) {
-    return 'https://api.github.com/users/' + user + '/events'
-}
-
 // React elements are a layer of abstraction: the virtual DOM.
 console.assert(React.isValidElement(Heading({ name: 'foobar' })))
 
@@ -619,15 +645,12 @@ console.assert(React.isValidElement(Heading({ name: 'foobar' })))
 console.assert(document.createElement('div') instanceof Element)
 
 // React elements are not.
-console.assert(!(Heading({ name: 'foobar'}) instanceof Element))
+console.assert(!(Heading({ name: 'foobar' }) instanceof Element))
 
 // We can render the virtual DOM to actual markup on a server:
 console.log(ReactDOMServer.renderToStaticMarkup(Heading({ name: 'foobar' })))
 // <span style="display:block;" class="h6 media-heading">foobar</span>
 
-var container = document.getElementById('app')
-http('GET', getEventsUrl('emilyhorsman'),
-    renderEvents.bind(null, container))
 ```
 
 https://twitter.com/dan_abramov/status/745757519994294281
