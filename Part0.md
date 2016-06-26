@@ -535,6 +535,17 @@ There are [many](https://garann.github.io/template-chooser/) of these JavaScript
 Recently, many browsers also implemented a [`<template>`](https://developer.mozilla.org/en/docs/Web/HTML/Element/template) tag used for this sort of thing.
 You can use this to clone an element created once, and then query children and fill in the elements.
 
+A central point to all of this is that there are many ways to render dynamic data during the runtime of your application, after the page has been loaded from the initial server response.
+There are trade-offs to all of these, but it’s more-or-less a solved problem*.
+
+>* Okay fine, there’s plenty of room for improvement.
+
+### (enter React)
+
+So, I want to say it right up front.
+This problem of rendering data after a page is loaded, from a server response or something — React didn’t break new ground here.
+If your page is completely static — not interactive — and doesn’t have a lot of data to manage during runtime, you should equally consider a templating library!
+
 ```html
 <div class="container-fluid m-t-1" id="app"></div>
 ```
